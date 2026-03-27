@@ -131,4 +131,16 @@ health.get('/api/accounts/migrations/:migrationId', async (c) => {
   }
 });
 
+health.get('/admin/setup-webhook', async (c) => {
+    const token = c.env.LINE_CHANNEL_ACCESS_TOKEN;
+      const res = await fetch('https://api.line.me/v2/bot/channel/webhook/endpoint', {
+          method: 'PUT',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                  body: JSON.stringify({ webhookEndpointUrl: 'https://line-crm-worker.daigo-tashiro.workers.dev/webhook' }),
+                    });
+                      const data = await res.json() as unknown;
+                        return c.json({ success: res.ok, status: res.status, data });
+                        });
+
+
 export { health };
